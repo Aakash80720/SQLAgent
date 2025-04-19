@@ -13,6 +13,8 @@ class FailureMode(Base):
     updated_at = Column(DateTime, default=datetime.UTC, onupdate=datetime.UTC)
 
     failure_mode_details = relationship("FailureModeDetails", back_populates="failure_mode")
+    step3 = relationship("Step3", back_populates="failure_mode")
+
     def __repr__(self):
         return f"<FailureMode(id={self.id}, name={self.name})>"
     

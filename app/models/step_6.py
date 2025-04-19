@@ -14,7 +14,7 @@ class Step6(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    step5 = relationship("Step5", back_populates="step6")
+    step1 = relationship("Step1", back_populates="step6")
 
     def __repr__(self):
         return f"<Step6(id={self.id}, step5_id={self.step5_id}, failure_mode_detail_id={self.failure_mode_detail_id})>"
