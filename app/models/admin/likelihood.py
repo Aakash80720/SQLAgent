@@ -13,7 +13,6 @@ class Likelihood(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    step5 = relationship("Step5", back_populates="likelihood")
 
     def __repr__(self):
         return f"<Likelihood(id={self.id}, name={self.name})>"

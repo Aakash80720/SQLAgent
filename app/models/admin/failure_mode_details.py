@@ -15,6 +15,8 @@ class FailureModeDetails(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     failure_mode = relationship("FailureMode", back_populates="failure_mode_details")
+    step3 = relationship("Step3", back_populates="failure_mode_details")
+
     def __repr__(self):
         return f"<FailureModeDetails(id={self.id}, failure_mode_id={self.failure_mode_id}, description={self.description})>"
     

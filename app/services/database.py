@@ -1,6 +1,6 @@
 import asyncio
-from app.models.base import Base
-from app.core.session import *
+from models.base import Base
+from core.session import *
 
 
 # Clear all metadata and recreate tables
