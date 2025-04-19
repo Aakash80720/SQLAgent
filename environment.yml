@@ -1,0 +1,16 @@
+name: sqlAgent
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - uvicorn
+  - fastapi
+  - sqlalchemy=2.0.29
+  - asyncpg=0.29.0
+  - alembic=1.13.1
+  - pydantic=2.7.0
+  - pip:
+      - pydantic-settings==2.2.1
+      - python-dotenv==1.0.1
