@@ -3,4 +3,7 @@ from .user_service import *
 __all__ = [
     "UserService",
     "UserCreateService",
+    "UserUpdateService",
+    "UserReadService",
+    "UserDeleteService",
 ]

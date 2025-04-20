@@ -4,7 +4,6 @@ from pydantic import BaseModel, EmailStr, Field, model_validator
 class UserBase(BaseModel):
     username: str
     email: EmailStr
-    full_name: Optional[str] = None
 
 class UserCreate(UserBase):
     password: str = Field(..., min_length=8, max_length=128)
@@ -22,6 +21,7 @@ class UserRead(UserBase):
 
     
 class UserUpdate(UserBase):
+    id : int = Field(..., gt=0)
     pass
 
 class UserDelete(BaseModel):

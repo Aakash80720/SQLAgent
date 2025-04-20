@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Optional, TypeVar, Generic
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.orm.util import has_identity
 
 T = TypeVar('T')
 ID = TypeVar('ID')
@@ -16,7 +17,7 @@ class Repository(ABC):
         pass
 
     @abstractmethod
-    async def update(self, item_id, item):
+    async def update(self, item_id, item, existing_item=None):
         pass
 
     @abstractmethod
@@ -46,15 +47,32 @@ class SQLRepository(Repository):
         return item
 
     async def read(self, item_id):
-        result = await self.session.execute(select(T).filter_by(id=item_id))
+        try:
+            result = await self.session.execute(select(self.model).filter_by(id=item_id))
+        except Exception as e:
+            print(f"Error executing query: {e}")
+            raise e
         return result.scalars().first()
 
-    async def update(self, item_id, item):
-        existing_item = await self.read(item_id)
+    async def update(self, item_id, item, existing_item=None):
+        print("existing_item",existing_item)
+        if existing_item is None:
+            existing_item = await self.read(item_id)
+        print(item.__dict__)
+        print(existing_item.__dict__)
         if existing_item:
             for key, value in item.__dict__.items():
-                setattr(existing_item, key, value)
-            await self.session.commit()
+                try:
+                    setattr(existing_item, key, value)
+                    
+                except AttributeError:
+                    print(f"Attribute {key} not found in {self.model.__name__}")
+            try:
+                print(f"Updating item: {has_identity(existing_item)}")
+                await self.session.commit()
+            except Exception as e:
+                await self.session.rollback()
+                raise e
             return existing_item
         return None
 
@@ -66,8 +84,10 @@ class SQLRepository(Repository):
             return True
         return False
 
-    async def list(self) -> List:
-        result = await self.session.execute(select(T))
+    async def list(self):
+        result = await self.session.execute(select(self.model))
+        if result is None:
+            return []
         return result.scalars().all()
     
     async def get_by_name(self, name: str):
